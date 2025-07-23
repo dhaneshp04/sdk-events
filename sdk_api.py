@@ -3,6 +3,7 @@ from pymongo import MongoClient
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 MONGO_URI = os.getenv("MONGO_URI")
@@ -12,6 +13,13 @@ db = client["cdp"]
 sdk_events = db["sdk_events"]
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # You can restrict this to your domain later
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/sdk/collect")
 async def collect_anything(request: Request):
